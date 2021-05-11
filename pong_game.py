@@ -1,8 +1,10 @@
-
+#!/usr/bin/env python
 import pygame
 import math
 from random import randint
 import time
+
+from pygame.constants import K_DELETE
 
 pygame.init()
 pygame.font.init()
@@ -26,9 +28,9 @@ speed = -10
 player_color = (255, 0, 0)
 
 ball_y_offset = 0
-ball_y_offset_mulitplier = 0.05
+ball_y_offset_mulitplier = 0.1
 yOffset = 3
-ball_speed = 5 #default is 25 current value is placeholder for testing
+ball_speed = 15
 
 def p1():
     
@@ -89,8 +91,8 @@ def ball():
     global BALL_RECT
     global PLAYER_RECT_1
     global PLAYER_RECT_2
-    global is_running
     global winning_side
+    global is_playing
 
     
 
@@ -115,10 +117,10 @@ def ball():
 
     if BALL_RECT.x < 0:
         winning_side = 1
-        is_running = False
+        is_playing = False
     elif BALL_RECT.x > 1680:
         winning_side = 2
-        is_running = False
+        is_playing = False
 
 
 
@@ -127,9 +129,10 @@ def ball():
     
 
 is_running = True
+is_playing = True
 
 
-win.fill((0, 0, 0))
+win.fill((0, 0, 255))
 
 
 p1()
@@ -149,28 +152,38 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
-    win.fill((0, 0, 0))
+    win.fill((0, 0, 255))
 
+    if is_playing:
+        p1()
+        p2()
+        ball()
 
-    p1()
-    p2()
-    ball()
+    else:
+        win.fill((255, 255, 0))
+        myfont = pygame.font.SysFont('FiraMono Bold', 100)
+        if winning_side == 1:
+            textsurface = myfont.render('RIGHT SIDE WON!', False, (0, 0, 0))
+        elif winning_side == 2:
+            textsurface = myfont.render('LEFT SIDE WON!', False, (0, 0, 0))
+        win.blit(textsurface,(1680/2,900/2))
+        pygame.display.update()
+        BALL_RECT.x = 1600/2
+        BALL_RECT.y = 900/2
+        PLAYER_RECT_1.x = 30
+        PLAYER_RECT_1.y = 350
+        PLAYER_RECT_2.x = 1540
+        PLAYER_RECT_2.y = 350
+        ball_y_offset = 0
+        
+        time.sleep(2)
+        
+        winning_side = 0
+        is_playing = True
 
+        
 
     pygame.display.update()
 
 
     tk.tick(60)
-
-if winning_side != 0:
-    win.fill((255, 255, 0))
-    myfont = pygame.font.SysFont('Comic Sans MS', 30)
-    if winning_side == 1:
-        textsurface = myfont.render('LEFT SIDE WON!', False, (0, 0, 0))
-    elif winning_side == 2:
-        textsurface = myfont.render('RIGHT SIDE WON!', False, (0, 0, 0))
-
-    win.blit(textsurface,(1680/2,900/2))
-    pygame.display.update()
-
-    time.sleep(5)
