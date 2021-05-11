@@ -4,7 +4,6 @@ import math
 from random import randint
 import time
 
-from pygame.constants import K_DELETE
 
 pygame.init()
 pygame.font.init()
